@@ -2,6 +2,7 @@
     Main file to run the game
 """
 from board import Board
+from bot import Bot
 
 
 def int_to_symbol(x):
@@ -15,33 +16,57 @@ def int_to_symbol(x):
     """
     if x == -1:
         return '_'
-    elif x == 0:
+    if x == 0:
         return 'X'
-    elif x == 1:
+    if x == 1:
         return 'O'
-    else:
-        return 'None'
+    return 'None'
 
 
-def display_board(board):
+def display_board(game_board):
     """
-    Display board with proper characters
+    Display game board with proper characters
 
     Args:
-        board (2d List): Board array
+        game_board (2d List): Board array
     """
     for i in range(3):
         for j in range(3):
-            print(int_to_symbol(board[i][j]), end='\t')
+            print(int_to_symbol(game_board[i][j]), end='\t')
         print()
 
 
 if __name__ == '__main__':
     board = Board()
+    bot = Bot(player=0)
     while board.winner == -1:
+        x, y = bot.get_bot_move()
+        board.move(x, y, player=0)
         display_board(board.board)
-        x = int(input("X-coordinate: "))
-        y = int(input("Y-coordinate: "))
-        board.move(x, y)
+        print(f'Bot played: {x}, {y}')
+
+        if board.winner != -1:
+            break
+
+        x = int(input('X-Coordinate: '))
+        y = int(input('Y-Coordinate: '))
+        board.move(x, y, player=1)
+        bot.add_player_move(x, y)
+        display_board(board.board)
+
+    # while board.winner == -1:
+    #     display_board(board.board)
+    #     x = int(input('X-Coordinate: '))
+    #     y = int(input('Y-Coordinate: '))
+    #     board.move(x, y, player=0)
+
+    #     if board.winner != -1:
+    #         break
+
+    #     bot.add_player_move(x, y)
+    #     x, y = bot.get_bot_move()
+    #     board.move(x, y, player=1)
+    #     display_board(board.board)
+    #     print(f'Bot played: {x}, {y}')
     display_board(board.board)
     print(f'Winner: {int_to_symbol(board.winner)}')

@@ -2,6 +2,7 @@
 """
 Tic-Tac-Toe board to play the game
 """
+import copy
 
 
 class Board:
@@ -32,7 +33,7 @@ class Board:
         """
         return self.__winner
 
-    def move(self, x, y):
+    def move(self, x, y, player):
         """
         Move of the current player
         Args:
@@ -43,6 +44,7 @@ class Board:
         """
         assert self.__board[x][y] == -1, "Board position occupied."
         assert self.__winner == -1, "Game complete."
+        assert player == self.__current_player, "Incorrect player move."
         self.__board[x][y] = self.__current_player
         self.__winner = self.__check_winner()
         self.__current_player = 1 if self.__current_player == 0 else 0
@@ -92,3 +94,25 @@ class Board:
                 if self.__board[i][j] == -1:
                     draw = False
         return draw
+
+    def get_moves(self):
+        """
+        Get all possible valid moves
+        Returns:
+            list: List of valid move tuples
+        """
+        moves = []
+        for i in range(3):
+            for j in range(3):
+                if self.__board[i][j] == -1:
+                    moves.append((i, j))
+        return moves
+
+    def copy(self):
+        """
+        Returns copy of the current board object
+
+        Returns:
+            Board: Current board configuration
+        """
+        return copy.deepcopy(self)
